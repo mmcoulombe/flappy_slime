@@ -4,10 +4,10 @@
 [ext_resource path="res://assets/slime/body.png" type="Texture" id=2]
 [ext_resource path="res://assets/slime/slime_eye.png" type="Texture" id=3]
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 56.2045, 111.865 )
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=2]
 resource_name = "death"
 length = 2.0
 tracks/0/type = "value"
@@ -49,8 +49,13 @@ hframes = 2
 frame = 1
 
 [node name="collision_shape" type="CollisionShape2D" parent="."]
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/death = SubResource( 3 )
+anims/death = SubResource( 2 )
 
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( -0.314238, 0.108105 )
+scale = Vector2( 9.1939, 11.1778 )
+
+[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_player_screen_exited"]
