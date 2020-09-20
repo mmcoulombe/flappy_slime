@@ -20,7 +20,6 @@ position = Vector2( -1.44835, 0 )
 scale = Vector2( 6.3938, 1 )
 
 [node name="top_pipe" type="KinematicBody2D" parent="."]
-editor/display_folded = true
 position = Vector2( 0, -360 )
 collision_layer = 2
 
@@ -31,7 +30,6 @@ shape = SubResource( 1 )
 texture = ExtResource( 2 )
 
 [node name="bottom_pipe" type="KinematicBody2D" parent="."]
-editor/display_folded = true
 position = Vector2( 0, 360 )
 collision_layer = 2
 
@@ -47,6 +45,5 @@ collision_layer = 4
 [node name="trigger_shape" type="CollisionShape2D" parent="score_trigger"]
 position = Vector2( 65.8443, -0.975342 )
 shape = SubResource( 3 )
-
 [connection signal="viewport_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_viewport_exited"]
 [connection signal="body_entered" from="score_trigger" to="." method="_on_score_trigger_entered"]

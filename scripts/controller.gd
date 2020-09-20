@@ -1,5 +1,7 @@
 extends Node2D
 
+onready var timer = get_node("../timer")
+onready var key_animation = get_node("../key_animation")
 onready var player = get_node("../player")
 onready var cloud_emitter = get_node("../cloud_emitter")
 onready var pipe_emitter = get_node("../pipe_emitter")
@@ -11,8 +13,13 @@ onready var gui = get_node("../ui/gui")
 func _ready():
 	cloud_emitter.emit()
 	pipe_emitter.emit()
-	yield(get_tree().create_timer(1.5), "timeout")
-	player.react_to_physic = true
+	key_animation.show()
+	player.sleeping = true
+	player.input_enabled = false
+	yield(get_tree().create_timer(2.5), "timeout")
+	player.sleeping = false
+	player.input_enabled = true
+	key_animation.hide()
 
 func freeze_paralax():
 	cloud_emitter.stop()
@@ -30,4 +37,11 @@ func _on_player_death(player):
 	player.play_death_choreograhpy()
 	black_rect.visible = true
 	gui.play_game_over()
-	
+
+func _on_timer_timeout():
+	player.input_enabled = true
+
+
+func _on_player_player_jumped():
+	timer.start()
+	player.input_enabled = false

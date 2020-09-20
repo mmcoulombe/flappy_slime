@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://prefabs/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://prefabs/cloud.tscn" type="PackedScene" id=2]
@@ -6,20 +6,23 @@
 [ext_resource path="res://scripts/cloud_emitter.gd" type="Script" id=4]
 [ext_resource path="res://gui/in_game_gui.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scripts/controller.gd" type="Script" id=6]
+[ext_resource path="res://prefabs/KeyAnimation.tscn" type="PackedScene" id=7]
 
 [node name="main" type="Node2D"]
 
 [node name="player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 163.167, 161.544 )
-scale = Vector2( 0.5, 0.5 )
 z_index = 2
 collision_layer = 1
 collision_mask = 6
-gravity = 10
-flap_speed = -150
+contacts_reported = 1
+contact_monitor = true
+
+[node name="key_animation" parent="." instance=ExtResource( 7 )]
+modulate = Color( 1, 1, 1, 0.835294 )
+position = Vector2( 351.331, 103.266 )
 
 [node name="spawn_container" type="Node2D" parent="."]
-editor/display_folded = true
 
 [node name="cloud3" parent="spawn_container" instance=ExtResource( 2 )]
 position = Vector2( 126.934, 263.388 )
@@ -31,7 +34,6 @@ position = Vector2( 620.39, 429.989 )
 position = Vector2( 1061.49, 150.734 )
 
 [node name="pipe_emitter" type="Node2D" parent="."]
-editor/display_folded = true
 position = Vector2( 1350, 360 )
 script = ExtResource( 3 )
 speed = 200
@@ -40,7 +42,6 @@ delay = 2.5
 [node name="pe_timer" type="Timer" parent="pipe_emitter"]
 
 [node name="cloud_emitter" type="Node2D" parent="."]
-editor/display_folded = true
 position = Vector2( 1400, 360 )
 script = ExtResource( 4 )
 
@@ -57,10 +58,14 @@ z_index = 4
 
 [node name="gui" parent="ui" instance=ExtResource( 5 )]
 
+[node name="timer" type="Timer" parent="."]
+wait_time = 0.6
+
 [node name="controller" type="Node2D" parent="."]
 position = Vector2( 61.2168, 1.36037 )
 script = ExtResource( 6 )
-
 [connection signal="player_death" from="player" to="controller" method="_on_player_death"]
+[connection signal="player_jumped" from="player" to="controller" method="_on_player_player_jumped"]
 [connection signal="timeout" from="pipe_emitter/pe_timer" to="pipe_emitter" method="_on_pe_timer_timeout"]
 [connection signal="timeout" from="cloud_emitter/ce_timer" to="cloud_emitter" method="_on_ce_timer_timeout"]
+[connection signal="timeout" from="timer" to="controller" method="_on_timer_timeout"]

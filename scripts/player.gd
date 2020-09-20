@@ -1,15 +1,14 @@
-extends KinematicBody2D
+extends RigidBody2D
 
 signal player_death(player)
+signal player_jumped()
 
-export(int) var gravity = 980
-export (int) var flap_speed = -400
+export(int) var flap_force = 250
 
 onready var collision_shape = $collision_shape
 onready var anim_player = $AnimationPlayer
 
 var score = 0 setget set_score, get_score
-var react_to_physic = false
 
 var velocity = Vector2()
 var input_enabled = true
@@ -21,11 +20,15 @@ func set_score(value):
 func get_score():
 	return score
 
-func apply_input():
+func apply_input(delta):
 	if input_enabled:
 		var flap = Input.is_action_just_pressed("ui_up")
 		if flap:
-			velocity.y = flap_speed
+			applied_force = Vector2.ZERO
+			linear_velocity = Vector2.ZERO
+			apply_central_impulse(Vector2(0, -1 * flap_force))
+			emit_signal("player_jumped")
+
 	if not is_alive:
 		if Input.is_action_just_released("restart"):
 			get_tree().reload_current_scene()
@@ -33,17 +36,9 @@ func apply_input():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	is_alive = true
-
+	
 func _physics_process(delta):
-	if not react_to_physic:
-		return
-
-	apply_input()
-
-	velocity.y += gravity
-	var collision  = move_and_collide(velocity * delta)
-	if collision && is_alive:
-		die()
+	apply_input(delta)
 
 func play_death_choreograhpy():
 	input_enabled = false
@@ -57,3 +52,8 @@ func die():
 
 func _on_player_screen_exited():
 	die()
+
+func _on_player_body_entered(body):
+	print('body enterred')
+	if is_alive:
+		die()
