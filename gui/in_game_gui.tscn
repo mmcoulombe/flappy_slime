@@ -1,78 +1,49 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scripts/gui/in_game_gui.gd" type="Script" id=1]
-[ext_resource path="res://assets/fonts/LiberationSerif-Bold.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://assets/fonts/VeraBd.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://assets/ui/ui_9patch.png" type="Texture" id=3]
+[ext_resource path="res://assets/fonts/score_font.tres" type="DynamicFont" id=4]
+[ext_resource path="res://assets/ui/BTN_BLUE_RECT_OUT.png" type="Texture" id=5]
+[ext_resource path="res://assets/ui/BTN_BLUE_RECT_IN.png" type="Texture" id=6]
+[ext_resource path="res://assets/fonts/btn_label_fon.tres" type="DynamicFont" id=7]
 
 [sub_resource type="DynamicFont" id=1]
-size = 48
-font_data = ExtResource( 2 )
-
-[sub_resource type="DynamicFont" id=2]
 size = 24
 font_data = ExtResource( 2 )
 
-[sub_resource type="Animation" id=3]
-resource_name = "game_over"
-length = 0.5
-tracks/0/type = "value"
-tracks/0/path = NodePath("MarginContainer/score:custom_fonts/font:size")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ 48, 96 ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("MarginContainer:rect_position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 120, 0 ), Vector2( 120, 180 ) ]
-}
-tracks/2/type = "value"
-tracks/2/path = NodePath("lbl_restart:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ false, true ]
-}
-
-[sub_resource type="DynamicFont" id=4]
-size = 48
+[sub_resource type="DynamicFont" id=2]
+size = 52
+outline_size = 4
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
 font_data = ExtResource( 2 )
 
 [node name="gui" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="MarginContainer" type="HBoxContainer" parent="."]
 margin_left = 120.0
 margin_right = 1281.0
 margin_bottom = 107.0
 custom_constants/separation = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="score" type="Label" parent="MarginContainer"]
-margin_top = 26.0
+margin_top = 25.0
 margin_right = 1040.0
-margin_bottom = 80.0
+margin_bottom = 82.0
 rect_min_size = Vector2( 1040, 0 )
-custom_fonts/font = SubResource( 1 )
-text = "Score: 0"
+custom_fonts/font = ExtResource( 4 )
+text = "Press \"Jump\" to start"
 align = 1
 valign = 1
 
@@ -83,22 +54,80 @@ margin_top = 28.0
 margin_right = 1161.0
 margin_bottom = 78.0
 rect_min_size = Vector2( 120, 50 )
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 1 )
 text = "FPS: 60"
 align = 1
 valign = 1
 
-[node name="anim_player" type="AnimationPlayer" parent="."]
-anims/game_over = SubResource( 3 )
+[node name="retry_panel_container" type="CenterContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -640.0
+margin_top = -360.0
+margin_right = 640.0
+margin_bottom = 360.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="lbl_restart" type="Label" parent="."]
-visible = false
-margin_left = 432.489
-margin_top = 335.795
-margin_right = 844.489
-margin_bottom = 389.795
-custom_fonts/font = SubResource( 4 )
-text = "Press \"R\" to restart"
+[node name="panel" type="NinePatchRect" parent="retry_panel_container"]
+margin_left = 390.0
+margin_top = 160.0
+margin_right = 890.0
+margin_bottom = 560.0
+rect_min_size = Vector2( 500, 400 )
+rect_pivot_offset = Vector2( 250, 200 )
+texture = ExtResource( 3 )
+patch_margin_left = 40
+patch_margin_top = 40
+patch_margin_right = 40
+patch_margin_bottom = 40
+
+[node name="MarginContainer" type="MarginContainer" parent="retry_panel_container/panel"]
+margin_right = 500.0
+margin_bottom = 400.0
+custom_constants/margin_top = 45
+custom_constants/margin_bottom = 65
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="retry_panel_container/panel/MarginContainer"]
+margin_top = 45.0
+margin_right = 500.0
+margin_bottom = 335.0
+
+[node name="game_over_lbl" type="Label" parent="retry_panel_container/panel/MarginContainer/VBoxContainer"]
+margin_right = 500.0
+margin_bottom = 62.0
+size_flags_vertical = 2
+custom_fonts/font = SubResource( 2 )
+text = "Game Over"
+align = 1
+
+[node name="btn_retry" type="TextureButton" parent="retry_panel_container/panel/MarginContainer/VBoxContainer"]
+margin_left = 59.0
+margin_top = 152.0
+margin_right = 440.0
+margin_bottom = 290.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource( 5 )
+texture_pressed = ExtResource( 6 )
+
+[node name="Label" type="Label" parent="retry_panel_container/panel/MarginContainer/VBoxContainer/btn_retry"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = ExtResource( 7 )
+text = "Retry ?"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
+[node name="Tween" type="Tween" parent="."]
+[connection signal="pressed" from="retry_panel_container/panel/MarginContainer/VBoxContainer/btn_retry" to="." method="_on_TextureButton_pressed"]

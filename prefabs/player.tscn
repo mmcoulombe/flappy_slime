@@ -1,65 +1,136 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
-[ext_resource path="res://assets/slime/body.png" type="Texture" id=2]
-[ext_resource path="res://assets/slime/slime_eye.png" type="Texture" id=3]
+[ext_resource path="res://assets/ship/ship.png" type="Texture" id=2]
+[ext_resource path="res://assets/smoke/blackSmoke24.png" type="Texture" id=3]
+[ext_resource path="res://assets/explosion_01_strip13.png" type="Texture" id=4]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 37.8224, 41.1483 )
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 16.9065
+height = 24.7571
 
 [sub_resource type="Animation" id=2]
-resource_name = "death"
-length = 2.0
+resource_name = "explosion"
 tracks/0/type = "value"
-tracks/0/path = NodePath("eye:frame")
+tracks/0/path = NodePath("explosion:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 1,
-"values": [ 0 ]
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0, 12 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/path = NodePath("body:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 2 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ 0.0, -180.0 ]
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("smoke:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("explosion:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
 }
 
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 0.263636 ), 0.0, 0.0, 0, 0, Vector2( 0.0997877, 0.963636 ), 0.0, 0.0, 0, 0, Vector2( 0.995754, 0.0090909 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=4]
+curve = SubResource( 3 )
+
+[sub_resource type="ParticlesMaterial" id=5]
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+spread = 15.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 85.2
+initial_velocity_random = 0.25
+angular_velocity = 264.75
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+tangential_accel = -38.0
+angle = 360.0
+angle_random = 1.0
+scale = 0.1
+scale_curve = SubResource( 4 )
+color = Color( 1, 1, 1, 0.4 )
+
 [node name="player" type="RigidBody2D"]
+position = Vector2( 432.148, 125.716 )
 collision_layer = 3
 collision_mask = 3
+mode = 2
 gravity_scale = 4.0
 script = ExtResource( 1 )
 
 [node name="body" type="Sprite" parent="."]
+rotation = 0.261799
 scale = Vector2( 0.4, 0.4 )
 texture = ExtResource( 2 )
-
-[node name="eye" type="Sprite" parent="."]
-position = Vector2( 6.5529, 20.998 )
-scale = Vector2( 0.4, 0.4 )
-texture = ExtResource( 3 )
-hframes = 2
-frame = 1
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="collision_shape" type="CollisionShape2D" parent="."]
+position = Vector2( 2.18268, 2.57951 )
+rotation = 1.5708
 shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/death = SubResource( 2 )
+anims/explosion = SubResource( 2 )
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
-position = Vector2( 1.0101, 21.5086 )
-scale = Vector2( 2.48291, 2.25875 )
+position = Vector2( -0.297636, 0 )
+scale = Vector2( 3.84212, 2.25875 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="smoke" type="Particles2D" parent="."]
+position = Vector2( -20.0447, -4.05809 )
+amount = 20
+process_material = SubResource( 5 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="explosion" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 4 )
+hframes = 13
 [connection signal="body_entered" from="." to="." method="_on_player_body_entered"]
 [connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_player_screen_exited"]
